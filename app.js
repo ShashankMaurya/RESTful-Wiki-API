@@ -26,6 +26,8 @@ const article = mongoose.model('article', wikiSchema);
 
 // Chaining Route methods
 
+// -----------------------------------------Requests targeting all articles----------------------------------------------------------
+
 app.route('/articles')
     .get(function (req, res) {
 
@@ -48,6 +50,45 @@ app.route('/articles')
 
         article.deleteMany()
             .then(() => res.send('All Articles Deleted successfully'))
+            .catch((err) => res.send(err));
+
+    });
+
+
+
+
+// -----------------------------------------Requests targeting specific articles----------------------------------------------------------
+
+
+app.route('/articles/:articleTitle')
+    .get(function (req, res) {
+
+        article.findOne({ title: req.params.articleTitle })
+            .then((foundArticles) => res.send(foundArticles))
+            .catch((err) => res.send(err));
+
+    })
+
+    .put(function (req, res) {
+
+        article.findOneAndUpdate({ title: req.params.articleTitle }, req.body, { overwrite: true })
+            .then((e) => res.send('Article ' + e.title + ' Edited successfully'))
+            .catch((err) => res.send(err));
+
+    })
+
+    .patch(function (req, res) {
+
+        article.findOneAndUpdate({ title: req.params.articleTitle }, { $set: req.body })
+            .then((e) => res.send('Article ' + e.title + ' Edited successfully'))
+            .catch((err) => res.send(err));
+
+    })
+
+    .delete(function (req, res) {
+
+        article.deleteOne({ title: req.params.articleTitle })
+            .then(() => res.send(req.params.articleTitle + ' Article Deleted successfully'))
             .catch((err) => res.send(err));
 
     });
