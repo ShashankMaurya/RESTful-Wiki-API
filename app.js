@@ -23,42 +23,75 @@ const wikiSchema = mongoose.Schema({
 
 const article = mongoose.model('article', wikiSchema);
 
+
+// Chaining Route methods
+
+app.route('/articles')
+    .get(function (req, res) {
+
+        article.find()
+            .then((foundArticles) => res.send(foundArticles))
+            .catch((err) => res.send(err));
+
+    })
+
+    .post(function (req, res) {
+
+        new article(req.body)
+            .save()
+            .then(() => res.send('Article Posted successfully'))
+            .catch((err) => res.send(err));
+
+    })
+
+    .delete(function (req, res) {
+
+        article.deleteMany()
+            .then(() => res.send('All Articles Deleted successfully'))
+            .catch((err) => res.send(err));
+
+    });
+
+
+
+
+
 // GET requests
 
-app.get('/articles', function (req, res) {
+// app.get('/articles', function (req, res) {
 
-    article.find()
-        .then((foundArticles) => res.send(foundArticles))
-        .catch((err) => res.send(err));
+//     article.find()
+//         .then((foundArticles) => res.send(foundArticles))
+//         .catch((err) => res.send(err));
 
-});
+// });
 
 
 
 
 // POST requests
 
-app.post('/articles', function (req, res) {
+// app.post('/articles', function (req, res) {
 
-    new article(req.body)
-    .save()
-    .then(()=>res.send('Article Posted successfully'))
-    .catch((err)=>res.send(err));
+//     new article(req.body)
+//         .save()
+//         .then(() => res.send('Article Posted successfully'))
+//         .catch((err) => res.send(err));
 
-});
+// });
 
 
 
 
 // DELETE requests
 
-app.delete('/articles', function (req, res) {
+// app.delete('/articles', function (req, res) {
 
-    article.deleteMany()
-    .then(()=>res.send('All Articles Deleted successfully'))
-    .catch((err)=>res.send(err));
+//     article.deleteMany()
+//         .then(() => res.send('All Articles Deleted successfully'))
+//         .catch((err) => res.send(err));
 
-});
+// });
 
 
 
